@@ -1,0 +1,54 @@
+ $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: "../WebService/WS_PulseTech.asmx/BindBuildingList",
+                data: '{}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    var k = r.d;
+                    var ddlbuilding = $("#CP_Main_drpBuilding");
+                    ddlbuilding.empty().append('<option selected="selected" value="0">hello select</option>');
+                    if (r.d.length > 0) {
+                        debugger;
+                        for (var k = 0; k < r.d.length; k++) {
+                            $("#CP_Main_drpBuilding").append($("<option></option>").val(r.d[k].BuildingID).html(r.d[k].Building));
+                            ////  ddlbuilding.append("<option value=" + r[k].BuildingID + ">" +r[k].Building + "</option>");
+                            // $("#CP_Main_drpBuilding").append(ddlbuilding);
+                        }
+
+                        debugger;
+                        //$('#<%= drpbuilding.ClientID%>').next().find("button.multiselect").prop("disabled", false);
+                        $(".multiselect dropdown-toggle btn btn-default disabled").prop("disabled", false);
+                        //  $("#CP_Main_drpBuilding").css("display", "block");
+                    }
+                    else {
+                        //  $("#CP_Main_drpBuilding").css("display", "None");
+                    }
+                },
+                error: function (r) {
+                    debugger;
+                }
+            });
+            
+            
+            <WebMethod(EnableSession:=True)>
+    Public Function BindBuildingList() As List(Of PulseResponse.BLL.Building)
+        Dim lstBuildings As List(Of PulseResponse.BLL.Building)
+        ' Dim tsp As New TSP_TSR_SearchList
+        Dim s As BuildingBLL = New BuildingBLL
+        lstBuildings = s.Get_ContactSiteBuildingsList(p_ContactID:=UserWrapper.GetCurrentUser().ContactID, p_ShowInactive:=False)         'A8075 - Amendment on Search Building Service Request in PulseTech
+
+
+
+        'If lstBuildings.Count > 0 Then
+        '    Me.drpBuilding.Enabled = True
+        '    Me.drpBuilding.DataSource = lstBuildings
+
+        'Else
+        '    Me.drpBuilding.Enabled = False
+        'End If
+        Return lstBuildings
+    End Function
